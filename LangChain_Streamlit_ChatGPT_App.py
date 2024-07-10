@@ -1,7 +1,7 @@
 from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import streamlit as st 
-from streamlit_chat import message
+from streamlit_chat import message # Used to display messages in a chat-app-like style
 
 from dotenv import load_dotenv, find_dotenv 
 
@@ -35,5 +35,18 @@ with st.sidebar:
 
         st.session_state.messages.append(AIMessage(content=response.content)) 
 
-st.session_state.messages
+# st.session_state.messages
 
+# message("This is ChatGPT", is_user=False) 
+
+# message("This is the user", is_user=True)
+
+if len(st.session_state.messages)>=1: 
+    if not isinstance(st.session_state.messages[0], SystemMessage): 
+        st.session_state.messages.insert(0, SystemMessage(content="You are a helpful assistant."))
+
+for i, msg in enumerate(st.session_state.messages[1:]): 
+    if i%2==0: 
+        message(msg.content, is_user=True, key=f"{i} User") 
+    else: 
+        message(msg.content, is_user=False, key=f"{i} ChatGPT")
